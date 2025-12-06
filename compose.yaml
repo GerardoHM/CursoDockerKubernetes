@@ -1,0 +1,67 @@
+services:
+  mysql8.0.43-debian:
+    container_name: mysql8.0.43-debian
+    image: mysql:8.0.43-debian
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: Ghernandezm18*
+      MYSQL_DATABASE: msvc_usuarios
+    volumes:
+      - data-mysql:/var/lib/mysql
+    restart: always
+    networks:
+      - spring
+
+  postgres16:
+    container_name: postgres16
+    image: postgres:16-alpine3.21
+    ports:
+      - "5532:5432"
+    environment:
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: msvc_cursos
+    volumes:
+      - data-postgres:/var/lib/postgresql/data
+    restart: always
+    networks:
+      - spring
+
+  msvc-usuarios:
+    container_name: msvc_usuarios
+    build:
+      context: ./
+      dockerfile: ./msvc-usuarios/Dockerfile
+    ports:
+      - "8001:8001"
+    env_file: ./msvc-usuarios/.env
+    networks:
+      - spring
+    depends_on:
+      - mysql8.0.43-debian
+    restart: always
+
+  msvc-cursos:
+    container_name: msvc_cursos
+    build:
+      context: ./
+      dockerfile: ./msvc-cursos/Dockerfile
+    ports:
+      - "8002:8002"
+    env_file: ./msvc-cursos/.env
+    networks:
+      - spring
+    depends_on:
+      - postgres16
+      - msvc-usuarios
+    restart: always
+
+volumes:
+  data-mysql:
+    name: data-mysql
+  data-postgres:
+    name: data-postgres
+
+networks:
+  spring:
+    name: spring
