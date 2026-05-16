@@ -1,0 +1,45 @@
+services:
+  postgres16:
+    container_name: postgres16
+    image: postgres:16-alpine3.21
+    ports:
+      - "5532:5432"
+    environment:
+      POSTGRES_PASSWORD: PostgresGHdzM18*
+      POSTGRES_DB: msvc_cursos
+    volumes:
+      - data-postgres:/var/lib/postgresql/data
+    restart: always
+    networks:
+      - spring
+
+  msvc-cursos:
+    container_name: msvc_cursos
+    image: gerardohdzm/cursos:latest
+#    build:
+#      context: ./
+#      dockerfile: ./msvc-cursos/Dockerfile
+    ports:
+      - "8002:8002"
+#    env_file: ./msvc-cursos/.env
+    environment:
+      PORT: 8002
+      DB_HOST: postgres16:5432
+      DB_DATABASE: msvc_cursos
+      DB_USERNAME: postgres
+      DB_PASSWORD: PostgresGHdzM18*
+      USUARIOS_URL: ec2-52-201-134-167.compute-1.amazonaws.com:8001
+    networks:
+      - spring
+    depends_on:
+      - postgres16
+      - msvc-usuarios
+    restart: always
+
+volumes:
+  data-postgres:
+    name: data-postgres
+
+networks:
+  spring:
+    name: spring
