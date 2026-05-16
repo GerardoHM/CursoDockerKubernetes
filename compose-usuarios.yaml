@@ -1,0 +1,43 @@
+services:
+  mysql8.0.43-debian:
+    container_name: mysql8.0.43-debian
+    image: mysql:8.0.43-debian
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: MySqlGHdzM18*
+      MYSQL_DATABASE: msvc_usuarios
+    volumes:
+      - data-mysql:/var/lib/mysql
+    restart: always
+    networks:
+      - spring
+
+  msvc-usuarios:
+    container_name: msvc_usuarios
+    image: gerardohdzm/usuarios:latest
+#    build:
+#      context: ./
+#      dockerfile: ./msvc-usuarios/Dockerfile
+    ports:
+      - "8001:8001"
+    environment:
+      PORT: 8001
+      DB_HOST: mysql8.0.43-debian:3306
+      DB_DATABASE: msvc_usuarios
+      DB_USERNAME: root
+      DB_PASSWORD: MySqlGHdzM18*
+      CURSOS_URL: ec2-3-80-54-179.compute-1.amazonaws.com:8002
+    networks:
+      - spring
+    depends_on:
+      - mysql8.0.43-debian
+    restart: always
+
+volumes:
+  data-mysql:
+    name: data-mysql
+
+networks:
+  spring:
+    name: spring
