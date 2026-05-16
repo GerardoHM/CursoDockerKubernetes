@@ -19,8 +19,11 @@ import java.util.Optional;
 @RestController
 public class CursoController {
 
-    @Autowired
-    CursoService cursoService;
+    public final CursoService cursoService;
+
+    public CursoController(CursoService cursoService){
+        this.cursoService = cursoService;
+    }
 
     @GetMapping
     public ResponseEntity<?> list(){

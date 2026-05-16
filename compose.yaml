@@ -5,7 +5,7 @@ services:
     ports:
       - "3307:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: Ghernandezm18*
+      MYSQL_ROOT_PASSWORD: MySqlGHdzM18*
       MYSQL_DATABASE: msvc_usuarios
     volumes:
       - data-mysql:/var/lib/mysql
@@ -19,7 +19,7 @@ services:
     ports:
       - "5532:5432"
     environment:
-      POSTGRES_PASSWORD: admin
+      POSTGRES_PASSWORD: PostgresGHdzM18*
       POSTGRES_DB: msvc_cursos
     volumes:
       - data-postgres:/var/lib/postgresql/data
@@ -29,12 +29,19 @@ services:
 
   msvc-usuarios:
     container_name: msvc_usuarios
-    build:
-      context: ./
-      dockerfile: ./msvc-usuarios/Dockerfile
+    image: gerardohdzm/usuarios:latest
+#    build:
+#      context: ./
+#      dockerfile: ./msvc-usuarios/Dockerfile
     ports:
       - "8001:8001"
-    env_file: ./msvc-usuarios/.env
+    environment:
+      PORT: 8001
+      DB_HOST: mysql8.0.43-debian:3306
+      DB_DATABASE: msvc_usuarios
+      DB_USERNAME: root
+      DB_PASSWORD: MySqlGHdzM18*
+      CURSOS_URL: msvc-cursos:8002
     networks:
       - spring
     depends_on:
@@ -43,12 +50,20 @@ services:
 
   msvc-cursos:
     container_name: msvc_cursos
-    build:
-      context: ./
-      dockerfile: ./msvc-cursos/Dockerfile
+    image: gerardohdzm/cursos:latest
+#    build:
+#      context: ./
+#      dockerfile: ./msvc-cursos/Dockerfile
     ports:
       - "8002:8002"
-    env_file: ./msvc-cursos/.env
+#    env_file: ./msvc-cursos/.env
+    environment:
+      PORT: 8002
+      DB_HOST: postgres16:5432
+      DB_DATABASE: msvc_cursos
+      DB_USERNAME: postgres
+      DB_PASSWORD: PostgresGHdzM18*
+      USUARIOS_URL: msvc-usuarios:8001
     networks:
       - spring
     depends_on:

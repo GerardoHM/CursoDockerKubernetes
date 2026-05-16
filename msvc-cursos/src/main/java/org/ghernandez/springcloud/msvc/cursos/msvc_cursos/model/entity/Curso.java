@@ -2,11 +2,10 @@ package org.ghernandez.springcloud.msvc.cursos.msvc_cursos.model.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Builder;
 import lombok.Data;
-import lombok.Singular;
 import org.ghernandez.springcloud.msvc.cursos.msvc_cursos.model.Usuario;
 
+import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
